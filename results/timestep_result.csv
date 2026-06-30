@@ -1,0 +1,4 @@
+dt_s,final_energy_error_percent,stability
+0.001,0.05,Stable
+0.005,0.73,Borderline
+0.01,12.3,Unstable

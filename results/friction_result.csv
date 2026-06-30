@@ -1,0 +1,4 @@
+mu,slope_experiment_distance_m,ppt_theory_distance_m,interpretation
+0.1,4.0,2.038735983690112,Fast sliding due to low friction
+0.5,4.0,0.4077471967380224,Slow sliding due to medium friction
+1.0,0.0,0.2038735983690112,Stopped or nearly stationary

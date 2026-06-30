@@ -1,0 +1,171 @@
+<?xml version="1.0"?>
+<sdf version="1.9">
+<world name="pendulum_world">
+
+  <physics type="dart">
+    <max_step_size>0.01</max_step_size>
+    <real_time_factor>1.0</real_time_factor>
+    <real_time_update_rate>1000</real_time_update_rate>
+  </physics>
+
+  <gravity>0 0 -9.81</gravity>
+
+  <gui fullscreen="0">
+    <camera name="user_camera">
+      <pose>0 -6 3 0 0.45 1.5708</pose>
+      <view_controller>orbit</view_controller>
+    </camera>
+  </gui>
+
+  <model name="pendulum">
+    <static>false</static>
+
+    <link name="base">
+      <pose>0 0 2.5 0 0 0</pose>
+      <inertial>
+        <mass>10.0</mass>
+        <inertia>
+          <ixx>0.1</ixx>
+          <iyy>0.1</iyy>
+          <izz>0.1</izz>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <visual name="base_visual">
+        <geometry>
+          <sphere>
+            <radius>0.08</radius>
+          </sphere>
+        </geometry>
+        <material>
+          <ambient>0.1 0.1 0.1 1</ambient>
+          <diffuse>0.1 0.1 0.1 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <link name="rod">
+      <pose>0.75 0 1.9 0 0.7854 0</pose>
+      <inertial>
+        <mass>0.2</mass>
+        <inertia>
+          <ixx>0.05</ixx>
+          <iyy>0.05</iyy>
+          <izz>0.001</izz>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <visual name="rod_visual">
+        <pose>0 0 -0.75 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.025</radius>
+            <length>1.5</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.1 0.3 1.0 1</ambient>
+          <diffuse>0.1 0.3 1.0 1</diffuse>
+        </material>
+      </visual>
+      <collision name="rod_collision">
+        <pose>0 0 -0.75 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.025</radius>
+            <length>1.5</length>
+          </cylinder>
+        </geometry>
+      </collision>
+    </link>
+
+    <link name="bob">
+      <pose>1.5 0 1.0 0 0 0</pose>
+      <inertial>
+        <mass>1.0</mass>
+        <inertia>
+          <ixx>0.01</ixx>
+          <iyy>0.01</iyy>
+          <izz>0.01</izz>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <visual name="bob_visual">
+        <geometry>
+          <sphere>
+            <radius>0.18</radius>
+          </sphere>
+        </geometry>
+        <material>
+          <ambient>1.0 0.2 0.1 1</ambient>
+          <diffuse>1.0 0.2 0.1 1</diffuse>
+        </material>
+      </visual>
+      <collision name="bob_collision">
+        <geometry>
+          <sphere>
+            <radius>0.18</radius>
+          </sphere>
+        </geometry>
+      </collision>
+    </link>
+
+    <joint name="pivot" type="revolute">
+      <parent>base</parent>
+      <child>rod</child>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <limit>
+          <lower>-3.14</lower>
+          <upper>3.14</upper>
+        </limit>
+        <dynamics>
+          <damping>0.0</damping>
+          <friction>0.0</friction>
+        </dynamics>
+      </axis>
+    </joint>
+
+    <joint name="bob_joint" type="fixed">
+      <parent>rod</parent>
+      <child>bob</child>
+    </joint>
+  </model>
+
+  <model name="ground_plane">
+    <static>true</static>
+    <link name="ground_link">
+      <collision name="ground_collision">
+        <geometry>
+          <plane>
+            <normal>0 0 1</normal>
+            <size>50 50</size>
+          </plane>
+        </geometry>
+      </collision>
+      <visual name="ground_visual">
+        <geometry>
+          <plane>
+            <normal>0 0 1</normal>
+            <size>50 50</size>
+          </plane>
+        </geometry>
+      </visual>
+    </link>
+  </model>
+
+  <light name="sun" type="directional">
+    <pose>0 0 10 0 0 0</pose>
+    <direction>-0.5 0.1 -0.9</direction>
+    <diffuse>1 1 1 1</diffuse>
+    <cast_shadows>true</cast_shadows>
+  </light>
+
+</world>
+</sdf>

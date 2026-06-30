@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<!--
+  noise_test.sdf — M13 실험 3: IMU 센서 노이즈 분석 월드
+
+  실험 방법:
+    1. <stddev> 값을 0.0 / 0.02 / 0.1 로 변경 (6곳 모두)
+    2. ros2 bag record -o results/imu_sigma0.02 /imu/data
+    3. 30초 이상 녹화 (100Hz × 30s = 3000 샘플)
+    4. python3 scripts/exp3_noise.py
+
+  ★ ign gazebo 직접 실행 가능 (TurtleBot4 불필요)
+  ★ 정적 로봇 (static=true) → 순수 센서 노이즈만 측정
+-->
+<sdf version="1.9">
+<world name="noise_test">
+
+  <physics type="dart">
+    <max_step_size>0.001</max_step_size>
+    <real_time_factor>1.0</real_time_factor>
+  </physics>
+
+  <gravity>0 0 -9.81</gravity>
+
+  <model name="static_robot">
+    <static>true</static>
+    <pose>0 0 0.15 0 0 0</pose>
+    <link name="body">
+      <inertial><mass>2.0</mass>
+        <inertia><ixx>0.0083</ixx><iyy>0.0167</iyy><izz>0.0217</izz>
+                 <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz></inertia>
+      </inertial>
+      <visual name="v">
+        <geometry><box><size>0.3 0.2 0.1</size></box></geometry>
+        <material><ambient>0.2 0.5 0.8 1</ambient></material>
+      </visual>
+
+      <!--
+        ★ 실험 3 — <stddev>를 모든 항목(6곳)에서 동일하게 변경:
+           조건 A: 0.0   (이상 센서)
+           조건 B: 0.02  (저가 IMU 수준) ← 기본값
+           조건 C: 0.1   (노이즈 많은 환경)
+      -->
+      <sensor name="imu_sensor" type="imu">
+        <always_on>true</always_on>
+        <update_rate>100</update_rate>
+        <imu>
+          <angular_velocity>
+            <x><noise type="gaussian"><mean>0.0</mean><stddev>0.1</stddev>
+               <bias_mean>0.0</bias_mean><bias_stddev>0.0001</bias_stddev></noise></x>
+            <y><noise type="gaussian"><mean>0.0</mean><stddev>0.1</stddev>
+               <bias_mean>0.0</bias_mean><bias_stddev>0.0001</bias_stddev></noise></y>
+            <z><noise type="gaussian"><mean>0.0</mean><stddev>0.1</stddev>
+               <bias_mean>0.0</bias_mean><bias_stddev>0.0001</bias_stddev></noise></z>
+          </angular_velocity>
+          <linear_acceleration>
+            <x><noise type="gaussian"><mean>0.0</mean><stddev>0.1</stddev></noise></x>
+            <y><noise type="gaussian"><mean>0.0</mean><stddev>0.1</stddev></noise></y>
+            <z><noise type="gaussian"><mean>0.0</mean><stddev>0.1</stddev></noise></z>
+          </linear_acceleration>
+        </imu>
+        <topic>/imu/data</topic>
+      </sensor>
+    </link>
+  </model>
+
+  <light name="sun" type="directional">
+    <pose>0 0 10 0 0 0</pose>
+    <direction>-0.5 0.1 -0.9</direction>
+    <diffuse>1 1 1 1</diffuse>
+    <cast_shadows>false</cast_shadows>
+  </light>
+
+</world>
+</sdf>
