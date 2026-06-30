@@ -1,85 +1,195 @@
-# M13 — 물리 시뮬레이션 기초  |  [이름] / [날짜]
+# ND1-M13-PBL
+## Physical Simulation Fundamentals with Gazebo (ROS 2 Humble)
 
-## 1. 프로젝트 개요
-
-ND1 피지컬 AI 전문가 과정 M13 실험 결과물입니다.
-마찰계수(μ), 타임스텝(Δt), 센서 노이즈(σ) 3가지 파라미터가
-Sim-to-Real 갭에 미치는 영향을 수치 실험과 Gazebo 시뮬레이터로 측정합니다.
+김영은 (Kim Youngeun)
 
 ---
 
-## ⚡ 2가지 실행 트랙
+# 1. Project Overview | 프로젝트 개요
 
-### Track A — Pure Python (평가 제출용, Gazebo 불필요)
+## English
+
+This project contains the experimental results for the ND1 Physical AI M13 laboratory.
+
+Three fundamental physics simulation experiments were performed using Gazebo Fortress and ROS 2 Humble.
+
+The objective is to investigate how different simulation parameters influence simulation accuracy and the Sim-to-Real gap.
+
+Experiments include:
+
+- Experiment 1 : Friction coefficient comparison
+- Experiment 2 : Timestep stability analysis
+- Experiment 3 : IMU Gaussian noise analysis
+
+---
+
+## 한국어
+
+ND1 Physical AI M13 물리 시뮬레이션 실습 프로젝트입니다.
+
+Gazebo Fortress와 ROS 2 Humble 환경에서 물리 시뮬레이션을 수행하였으며,
+
+다음 세 가지 실험을 통해 물리 파라미터가 시뮬레이션 결과에 미치는 영향을 분석하였습니다.
+
+- 실험 1 : 마찰계수 비교
+- 실험 2 : Time Step 안정성 분석
+- 실험 3 : IMU Gaussian Noise 분석
+
+---
+
+# 2. Development Environment | 개발 환경
+
+| Item | Version |
+|------|---------|
+| Ubuntu | 22.04 |
+| ROS2 | Humble |
+| Gazebo | Fortress |
+| Python | 3.10 |
+| NumPy | Latest |
+| Matplotlib | Latest |
+
+---
+
+# 3. Directory Structure | 프로젝트 구조
+
+```
+ND1_M13_PBL
+│
+├── worlds/
+│   ├── friction_test.sdf
+│   ├── pendulum_test.sdf
+│   └── imu_noise_test.sdf
+│
+├── scripts/
+│   ├── exp1_friction.py
+│   ├── exp2_timestep.py
+│   └── exp3_noise.py
+│
+├── results/
+│   ├── friction_comparison.png
+│   ├── timestep_comparison.png
+│   ├── noise_analysis.png
+│   ├── friction_result.csv
+│   ├── timestep_result.csv
+│   └── noise_result.csv
+│
+├── README.md
+└── run.sh
+```
+
+---
+
+# 4. Experiment 1 : Friction Coefficient
+
+## Objective
+
+Compare object motion under different friction coefficients.
+
+Parameters
+
+- μ = 0.1
+- μ = 0.5
+- μ = 1.0
+
+Result
+
+- Low friction → longest moving distance
+- Medium friction → reduced movement
+- High friction → object almost stationary
+
+Output
+
+- friction_comparison.png
+- friction_result.csv
+
+---
+
+# 5. Experiment 2 : Timestep Stability
+
+## Objective
+
+Analyze numerical stability according to simulation timestep.
+
+Parameters
+
+- Δt = 0.001 s
+- Δt = 0.005 s
+- Δt = 0.01 s
+
+Result
+
+Smaller timesteps produce more stable simulations.
+
+Larger timesteps increase numerical error and reduce simulation accuracy.
+
+Output
+
+- timestep_comparison.png
+- timestep_result.csv
+
+---
+
+# 6. Experiment 3 : IMU Noise Analysis
+
+## Objective
+
+Evaluate Gaussian sensor noise.
+
+Parameters
+
+σ =
+
+- 0.0
+- 0.02
+- 0.1
+
+Result
+
+Increasing σ produces wider Gaussian distributions and larger measurement uncertainty.
+
+Output
+
+- noise_analysis.png
+- noise_result.csv
+
+---
+
+# 7. Generated Figures
+
+The following figures are automatically generated.
+
+- friction_comparison.png
+- timestep_comparison.png
+- noise_analysis.png
+
+---
+
+# 8. Execution
+
+Run each experiment independently.
+
+Experiment 1
 
 ```bash
-cd ND1_M13_PBL
-bash run.sh python
-# 또는 개별:
-python3 python/exp1_euler_rk4.py
-python3 python/exp2_friction_slope.py
-python3 python/exp3_inertia_gap.py
+python3 scripts/exp1_friction.py
 ```
 
-| 파일 | 함수 | 합격 기준 |
-|------|------|----------|
-| python/exp1_euler_rk4.py | euler_integrate() / rk4_integrate() | MAE 표 + PNG |
-| python/exp2_friction_slope.py | block_on_slope() | μ=1.0에서 블록 정지 |
-| python/exp3_inertia_gap.py | pendulum_with_inertia() | I_ratio별 주기 차이 |
-
-### Track B — Gazebo 시뮬레이션 (심화용, ROS2+Gazebo 필요)
-
-> ⚠️ **실험 1은 `ign gazebo` 직접 실행 불가 — ros2 launch 사용 (RUNBOOK.md 참조)**
+Experiment 2
 
 ```bash
-bash run.sh verify   # 환경 검증
-bash run.sh all      # 전체 분석
+python3 scripts/exp2_timestep.py
 ```
 
----
-
-## 2. 실행 환경
-
-| 항목 | Track A | Track B |
-|------|---------|---------|
-| Python 3.10+ numpy scipy matplotlib | ✅ 필수 | ✅ 필수 |
-| Ubuntu 22.04 / ROS2 Humble / Gazebo Fortress | 불필요 | ✅ 필수 |
-| rosbags | 불필요 | ✅ 필수 |
+Experiment 3
 
 ```bash
-# 공통 설치
-pip3 install -r requirements.txt --break-system-packages
-
-# Track B 추가 (ROS2 환경)
-sudo apt install -y ros-humble-ros-gz-sim ros-humble-ros-gz-bridge
-sudo apt install -y ros-humble-turtlebot4-simulator
+python3 scripts/exp3_noise.py
 ```
 
 ---
 
-## 3. 디렉터리 구조
+# 9. References
 
-```
-ND1_M13_PBL/
-├── python/      ← Track A: 평가 실험 (TODO 완성 필요)
-├── scripts/     ← Track B: Gazebo bag 분석 (TODO 완성 필요)
-├── src/         ← 공통 유틸리티 (sdf_utils.py — 수정 불필요)
-├── worlds/      ← Gazebo SDF 파일 (파라미터 변경 위치)
-├── results/     ← 실험 결과 저장 위치
-├── tests/       ← 단위 테스트 (pytest)
-├── run.sh       ← 실행 스크립트
-├── RUNBOOK.md   ← 1분 재현 가이드
-└── requirements.txt
-```
-
----
-
-## 4. 오류 해결
-
-| 오류 | 해결 |
-|------|------|
-| ModuleNotFoundError: sdf_utils | `cd ND1_M13_PBL` 후 실행 |
-| None 반환 (exp1~3) | pass → 함수 구현 |
-| Gazebo 검은 화면 | `export LIBGL_ALWAYS_SOFTWARE=1` |
-| Unable to find uri[model://turtlebot4] | ros2 launch 사용 (RUNBOOK.md) |
-| bag record 즉시 Stopped | Gazebo + 로봇 먼저 실행 후 녹화 |
+- ROS 2 Humble Documentation
+- Gazebo Fortress Documentation
+- Open Robotics
